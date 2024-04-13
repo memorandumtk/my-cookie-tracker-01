@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Cookie Tracker",
+  "description": "Tracks your cookie preferences across websites",
+  "version": "1.0.0",
+  "permissions": [
+    "cookies",
+    "storage",
+    "tabs",
+    "activeTab"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
