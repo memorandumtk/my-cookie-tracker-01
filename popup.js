@@ -1,14 +1,17 @@
-chrome.cookies.getAll({}, function(cookies) {
-    for (var i = 0; i < cookies.length; i++) {
-        console.log(`${cookies[i].domain}: ${cookies[i].name} = ${cookies[i].value}`);
-    }
-});
-chrome.storage.sync.get(null, (data) => {
-    const cookieList = document.getElementById('cookie-list');
+await chrome.storage.local.get("cookieData", (data) => {
+    console.log(data);
+    const siteList = document.getElementById('site-list');
+    siteList.innerHTML = ''; // Clear existing list
 
-    for (let siteUrl in data) {
-        let listItem = document.createElement('li');
-        listItem.textContent = `${siteUrl} - Preferences: ${JSON.stringify(data[siteUrl].preferences)}`;
-        cookieList.appendChild(listItem);
+    if (data.cookieData) {
+        for (const [site, preference] of Object.entries(data.cookieData)) {
+            let listItem = document.createElement('li');
+            listItem.textContent = `${site}: ${preference}`;
+            siteList.appendChild(listItem);
+        }
+    } else {
+        let message = document.createElement('p');
+        message.textContent = 'No cookie preferences recorded yet.';
+        siteList.appendChild(message);
     }
 });

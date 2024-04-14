@@ -1,15 +1,71 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete') { // Website fully loaded
-        chrome.cookies.getAll({ url: tab.url }, (cookies) => {
-            // Process Cookies
-            let siteData = {
-                url: tab.url,
-                preferences: cookies
-            };
-            console.log(siteData);
-            chrome.storage.sync.set({ [tab.url]: siteData }, () => {
-                console.log("Cookie Preferences stored for", tab.url);
-            });
+console.log('Background script loaded');
+// Storage initialization (if it doesn't exist)
+chrome.storage.local.get("cookieData", (data) => {
+    if (!data.cookieData) {
+        console.log('Initializing cookieData')
+        chrome.storage.local.set({ cookieData: {} });
+    }
+});
+
+// Listener for cookie changes
+chrome.cookies.onChanged.addListener((changeInfo) => {
+    if (!changeInfo.removed) { // Focus on new or modified cookies
+        console.log(changeInfo.cookie);
+        const site = changeInfo.cookie.domain;
+        const name = changeInfo.cookie.name;
+        const value = changeInfo.cookie.value;
+        const expirationDate = changeInfo.cookie.expirationDate;
+
+        chrome.storage.local.get("cookieData", (data) => {
+            let cookieData = data.cookieData || {};
+            if (!cookieData[site]) {
+                cookieData[site] = {};
+            } else if (cookieData[site]) {
+                cookieData[site][name] = { value, expirationDate }
+                chrome.storage.local.set({ cookieData });
+            } else if (cookieData[site][name]) {
+                storedData = { value, expirationDate }
+                cookieData[site][name] = storedData;
+                chrome.storage.local.set({ cookieData });
+                console.log(storedData);
+            }
+            console.log('Cookie data updated');
         });
     }
 });
+
+
+// {domain: 'developer.chrome.com', expirationDate: 1746824218, hostOnly: true, httpOnly: false, name: 'cookies_accepted', …}
+// domain
+// :
+// "developer.chrome.com"
+// expirationDate
+// :
+// 1746824218
+// hostOnly
+// :
+// true
+// httpOnly
+// :
+// false
+// name
+// :
+// "cookies_accepted"
+// path
+// :
+// "/"
+// sameSite
+// :
+// "unspecified"
+// secure
+// :
+// false
+// session
+// :
+// false
+// storeId
+// :
+// "0"
+// value
+// :
+// "true"
