@@ -1,0 +1,10 @@
+table {
+  border-collapse: collapse; /* Ensures no gaps between borders */
+}
+
+th,
+td {
+  padding: 5px; /* Add some padding for spacing */
+  border: 1px solid #ddd; /* Add a thin border */
+  text-align: left; /* Align content to the left by default */
+}
