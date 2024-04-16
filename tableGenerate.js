@@ -2,7 +2,7 @@ import { formatDate } from "./formatDate.js";
 
 const headerGenerate = (data) => {
     let domainHeader = document.createElement('th');
-    domainHeader.textContent = 'Domain';
+    domainHeader.textContent = 'Detail';
     let nameHeader = document.createElement('th');
     nameHeader.textContent = 'Name';
     let valueHeader = document.createElement('th');
@@ -38,7 +38,7 @@ const removeCookie = async (domain, name, e) => {
     e.target.closest('tr').remove();
 }
 
-const rowGenerate = (domain, storedData) => {
+const rowGenerate = (index, domain, storedData) => {
     console.log(domain);
     console.log(storedData);
     let name = Object.keys(storedData)[0];
@@ -53,7 +53,12 @@ const rowGenerate = (domain, storedData) => {
         expirationDate = 'No expiration date.';
     }
     let domainTd = document.createElement('td');
-    domainTd.textContent = domain;
+    let domainAnchor = document.createElement('a');
+    domainAnchor.textContent = domain;
+    domainAnchor.href = `./details.html?domain=${domain}`;
+    // domainAnchor.textContent = domain[0] === '.' ? domain.slice(1) : domain; // Remove the leading '.' if it exists.
+    // domainAnchor.href = `https://${domainAnchor.textContent}`;
+    domainTd.appendChild(domainAnchor);
     let nameTd = document.createElement('td');
     nameTd.textContent = name;
     let valueTd = document.createElement('td');
@@ -83,8 +88,8 @@ const tableGenerate = (data) => {
     let table = document.createElement('table');
     let header = headerGenerate(data);
     table.appendChild(header);
-    for (const [domain, storedData] of Object.entries(data)) {
-        let row = rowGenerate(domain, storedData);
+    for (const [index, [domain, storedData]] of Object.entries(data).entries()) {
+        let row = rowGenerate(index, domain, storedData);
         table.appendChild(row);
     }
     return table;
