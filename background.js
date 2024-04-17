@@ -11,13 +11,13 @@ chrome.storage.local.get("cookieData", (data) => {
 // Listener for cookie changes
 chrome.cookies.onChanged.addListener((changeInfo) => {
   if (!changeInfo.removed) { 
-    console.log(changeInfo.cookie);
 
     const domain = changeInfo.cookie.domain;
     const name = changeInfo.cookie.name;
-    const value = changeInfo.cookie.value;
-    const expirationDate = changeInfo.cookie.expirationDate;
-    const storedData = { value, expirationDate };
+    // const value = changeInfo.cookie.value;
+    // const expirationDate = changeInfo.cookie.expirationDate;
+    // const storedData = { value, expirationDate };
+    const storedData = changeInfo.cookie;
 
     chrome.storage.local.get("cookieData", (data) => {
       let cookieData = data.cookieData || {};
@@ -28,7 +28,7 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
 
       cookieData[domain][name] = storedData; 
       chrome.storage.local.set({ cookieData }); 
-      console.log('Cookie data updated');
+      console.log(storedData)
     });
   }
 });

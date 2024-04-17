@@ -14,3 +14,7 @@ td {
     min-width: 400px;
     word-break: break-word;
 }
+
+.modal-opened {
+    display: block;
+}

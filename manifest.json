@@ -19,5 +19,9 @@
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "./details/details.html",
+    "open_in_tab": false
   }
 }

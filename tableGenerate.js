@@ -1,4 +1,5 @@
 import { formatDate } from "./formatDate.js";
+// import { openDetails } from "./details/details.js";
 
 const headerGenerate = (data) => {
     let domainHeader = document.createElement('th');
@@ -9,7 +10,7 @@ const headerGenerate = (data) => {
     valueHeader.textContent = 'Value';
     let expirationHeader = document.createElement('th');
     expirationHeader.textContent = 'Expiration Date';
-
+    // append all headers to row
     let headerRow = document.createElement('tr');
     headerRow.appendChild(domainHeader);
     headerRow.appendChild(nameHeader);
@@ -52,20 +53,26 @@ const rowGenerate = (index, domain, storedData) => {
         value = 'No value.';
         expirationDate = 'No expiration date.';
     }
+    // domain td
     let domainTd = document.createElement('td');
     let domainAnchor = document.createElement('a');
     domainAnchor.textContent = domain;
-    domainAnchor.href = `./details.html?domain=${domain}`;
-    // domainAnchor.textContent = domain[0] === '.' ? domain.slice(1) : domain; // Remove the leading '.' if it exists.
-    // domainAnchor.href = `https://${domainAnchor.textContent}`;
+    // Remove the leading dot sign if it exists to have access to the site of the domain.
+    let modifiedDomain = domain[0] === '.' ? domain.slice(1) : domain; // Remove the leading '.' if it exists.
+    domainAnchor.href = `https://${modifiedDomain}`;
+    domainAnchor.target = '_blank';
     domainTd.appendChild(domainAnchor);
+    // name td
     let nameTd = document.createElement('td');
     nameTd.textContent = name;
+    // value td
     let valueTd = document.createElement('td');
     valueTd.textContent = value;
     valueTd.classList.add('value-cell');
+    // expiration td
     let expirationTd = document.createElement('td');
     expirationTd.textContent = formattedExpirationDate;
+    // remove button td
     let removeButtonTd = document.createElement('td');
     let removeButton = document.createElement('button');
     removeButton.textContent = 'Remove';
@@ -73,8 +80,16 @@ const rowGenerate = (index, domain, storedData) => {
         removeCookie(domain, name, e);
     });
     removeButtonTd.appendChild(removeButton);
-
+    // append all tds to row
     let row = document.createElement('tr');
+    row.id = `row-${index}`;
+    row.addEventListener('click', (e) => {
+        chrome.runtime.openOptionsPage();
+        let toBeSentData = { domain: domain, name: name, details: storedData, event: e };
+        setTimeout(() => {
+            chrome.runtime.sendMessage({ type: 'openDetails', data: toBeSentData }); 
+        }, 1000);
+    });
     row.appendChild(domainTd);
     row.appendChild(nameTd);
     row.appendChild(valueTd);
