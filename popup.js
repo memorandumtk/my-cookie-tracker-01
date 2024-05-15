@@ -1,13 +1,12 @@
-import { formatDate } from "./formatDate.js";
-import { tableGenerate } from "./tableGenerate.js";
+import { tableGenerate } from "./utils/tableGenerate.js";
 
 await chrome.storage.local.get("cookieData", (data) => {
     console.log(data);
     const cookieDataDiv = document.getElementById('cookie-data');
     // Remove all children from the div.
-    while (cookieDataDiv.firstChild) {
-        cookieDataDiv.removeChild(cookieDataDiv.firstChild);
-    }
+    // while (cookieDataDiv.firstChild) {
+    //     cookieDataDiv.removeChild(cookieDataDiv.firstChild);
+    // }
 
     if (data.cookieData) {
         // Generate a table of the cookie data if `data.cookieData` exists.

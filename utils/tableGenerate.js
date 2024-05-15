@@ -1,5 +1,5 @@
 import { formatDate } from "./formatDate.js";
-// import { openDetails } from "./details/details.js";
+import { messageSend } from "./messageSend.js";
 
 const headerGenerate = (data) => {
     let domainHeader = document.createElement('th');
@@ -10,6 +10,7 @@ const headerGenerate = (data) => {
     valueHeader.textContent = 'Value';
     let expirationHeader = document.createElement('th');
     expirationHeader.textContent = 'Expiration Date';
+
     // append all headers to row
     let headerRow = document.createElement('tr');
     headerRow.appendChild(domainHeader);
@@ -40,8 +41,6 @@ const removeCookie = async (domain, name, e) => {
 }
 
 const rowGenerate = (index, domain, storedData) => {
-    console.log(domain);
-    console.log(storedData);
     let name = Object.keys(storedData)[0];
     let value, expirationDate, formattedExpirationDate;
     if (name) {
@@ -84,11 +83,10 @@ const rowGenerate = (index, domain, storedData) => {
     let row = document.createElement('tr');
     row.id = `row-${index}`;
     row.addEventListener('click', (e) => {
+        console.log('row clicked')
         chrome.runtime.openOptionsPage();
-        let toBeSentData = { domain: domain, name: name, details: storedData, event: e };
-        setTimeout(() => {
-            chrome.runtime.sendMessage({ type: 'openDetails', data: toBeSentData }); 
-        }, 1000);
+        let detailsToBeSent = { domain: domain, name: name, details: storedData, event: e };
+        messageSend(detailsToBeSent);
     });
     row.appendChild(domainTd);
     row.appendChild(nameTd);
@@ -109,8 +107,5 @@ const tableGenerate = (data) => {
     }
     return table;
 }
-
-// Example of one of `cookieData`:
-// .gemini.google.com: { "_ga_WC57KJ50ZZ": { "expirationDate": 1747693642.136171, "value": "GS1.1.1713133262.3.1.1713133642.0.0.0" } }
 
 export { tableGenerate };
