@@ -23,7 +23,6 @@ let cookieName;
 let cookieDetails;
 let table;
 
-// Somewhere in your extension's initialization logic (not inside a listener)
 async function initializeDetailsArea() {
     if (cookieDetails) {
         table = await tableOfDetailsGenerate(cookieDetails);
@@ -57,19 +56,31 @@ const detailsGenerate = async () => {
     domainNameElement.textContent = modifiedDomain;
 }
 
-
-// Receiving the message from tableGenerate.js through message passing.
-chrome.runtime.onMessage.addListener(
-    async function (message, sender, sendResponse) {
-        console.log(message)
-        if (message.type === 'openDetails') {
-            domain = message.data.domain;
-            cookieName = message.data.name;
-            cookieDetails = message.data.details[cookieName];
-            sendResponse({received: "Message received."});
-
-            console.log('Message received:', message); // Check message content
-            await detailsGenerate(); // Update the table once
+// Event listener for DOMContentLoaded. When this details page is loaded, this tries to retrieve data in storage 'details'.
+document.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed')
+    chrome.storage.local.get('details', async function (data) {
+        console.log('Inside chrome.storage.local.get callback');
+        if (chrome.runtime.lastError) {
+            console.error('Error retrieving details:', chrome.runtime.lastError);
         }
-    }
-);
+        if (data && data.details) {
+            console.log('Details received:', data.details);
+            domain = data.details.domain;
+            cookieName = data.details.name;
+            cookieDetails = data.details.details[cookieName];
+
+            console.log('Domain:', domain);
+            console.log('Cookie Name:', cookieName);
+            console.log('Cookie Details:', cookieDetails);
+
+            await detailsGenerate(); // Update the table once
+
+            chrome.storage.local.remove('details', () => {
+                console.log('Details removed from storage');
+            }); // Clean up storage if necessary
+        } else {
+            console.log('No details found in storage');
+        }
+    });
+});

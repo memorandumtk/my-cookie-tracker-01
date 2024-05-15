@@ -1,4 +1,4 @@
-import { formatDate } from "./formatDate.js";
+import { formatDate } from "../formatDate.js";
 import { messageSend } from "./messageSend.js";
 
 const headerGenerate = (data) => {
@@ -82,12 +82,13 @@ const rowGenerate = (index, domain, storedData) => {
     // append all tds to row
     let row = document.createElement('tr');
     row.id = `row-${index}`;
-    row.addEventListener('click', (e) => {
+
+    row.addEventListener('click', async (e) => {
         console.log('row clicked')
-        chrome.runtime.openOptionsPage();
-        let detailsToBeSent = { domain: domain, name: name, details: storedData, event: e };
-        messageSend(detailsToBeSent);
+        let detailsToBeSent = {domain: domain, name: name, details: storedData, event: e};
+        await messageSend(detailsToBeSent)
     });
+
     row.appendChild(domainTd);
     row.appendChild(nameTd);
     row.appendChild(valueTd);
