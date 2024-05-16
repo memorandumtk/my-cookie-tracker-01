@@ -18,4 +18,8 @@ label input {
 
 #details-div {
   width: 800px;
+  padding: 0 0 10px 0;
+  display: grid;
+  justify-items: center;
+  align-items: center;
 }

@@ -1,6 +1,11 @@
 import { formatDate } from "../formatDate.js";
 import { messageSend } from "./messageSend.js";
 
+/**
+ * Generate header row for the table.
+ * @param data
+ * @returns {HTMLTableRowElement}
+ */
 const headerGenerate = (data) => {
     let domainHeader = document.createElement('th');
     domainHeader.textContent = 'Detail';
@@ -21,16 +26,27 @@ const headerGenerate = (data) => {
     return headerRow;
 }
 
+/**
+ * Remove the cookie from storage and the table.
+ * @param domain
+ * @param name
+ * @param e
+ * @returns {Promise<void>}
+ */
 const removeCookie = async (domain, name, e) => {
     // Remove the cookie from storage.
     await chrome.storage.local.get("cookieData", (data) => {
         console.log('before');
         console.log(data);
         let cookieData = data.cookieData || {};
+
+        // Remove the cookie from the object: cookieData.
         delete cookieData[domain][name];
+        // If the domain object got empty once or from init, remove the domain object.
         if (Object.keys(cookieData[domain]).length === 0) {
             delete cookieData[domain];
         }
+
         chrome.storage.local.set({ cookieData });
         console.log('after');
         console.log(data);
@@ -40,7 +56,14 @@ const removeCookie = async (domain, name, e) => {
     e.target.closest('tr').remove();
 }
 
-const rowGenerate = (index, domain, storedData) => {
+/**
+ * Generate a row for the table.
+ * @param index
+ * @param domain
+ * @param storedData
+ * @returns {HTMLTableRowElement}
+ */
+function rowGenerate (index, domain, storedData) {
     let name = Object.keys(storedData)[0];
     let value, expirationDate, formattedExpirationDate;
     if (name) {
@@ -98,7 +121,12 @@ const rowGenerate = (index, domain, storedData) => {
     return row;
 }
 
-const tableGenerate = (data) => {
+/**
+ * Generate a table for the popup.
+ * @param data
+ * @returns {HTMLTableElement}
+ */
+function tableGenerate (data) {
     let table = document.createElement('table');
     let header = headerGenerate(data);
     table.appendChild(header);

@@ -1,6 +1,8 @@
 console.log('Background script loaded');
 
-// Storage initialization (if it doesn't exist)
+/**
+ * Storage initialization (if it doesn't exist)
+ */
 chrome.storage.local.get("cookieData", (data) => {
     console.log(data);
     if (!data) {
@@ -9,7 +11,9 @@ chrome.storage.local.get("cookieData", (data) => {
     }
 });
 
-// Listener for opening the options page to pass the message from popup to details.
+/**
+ * Listener for opening the options page to pass the message from popup to details through this in background.
+ */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Message received in background.js:', message);
     if (message.action === 'openOptionsPage') {

@@ -1,17 +1,3 @@
-// Copyright 2023 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 import {tableOfDetailsGenerate} from "../utils/details/tableOfDetailsGenerate.js";
 
 const detailsDiv = document.getElementById('details-div');
@@ -23,6 +9,10 @@ let cookieName;
 let cookieDetails;
 let table;
 
+/**
+ * Initialize the details area with the table of details.
+ * @returns {Promise<void>}
+ */
 async function initializeDetailsArea() {
     if (cookieDetails) {
         table = await tableOfDetailsGenerate(cookieDetails);
@@ -30,6 +20,9 @@ async function initializeDetailsArea() {
     }
 }
 
+/**
+ * Update the table content.
+ */
 function updateTable() {
     // Clear existing table content.
     console.log(table);
@@ -44,7 +37,11 @@ function updateTable() {
         });
 }
 
-const detailsGenerate = async () => {
+/**
+ * Trigger to generate the details table for details.html.
+ * @returns {Promise<void>}
+ */
+async function detailsGenerate () {
     // Append the table to the div.
     console.log(cookieDetails);
 
@@ -56,7 +53,11 @@ const detailsGenerate = async () => {
     domainNameElement.textContent = modifiedDomain;
 }
 
-// Event listener for DOMContentLoaded. When this details page is loaded, this tries to retrieve data in storage 'details'.
+/**
+ * Event listener for DOMContentLoaded.
+ * When this details page is loaded, this tries to retrieve data in chrome.runtime.storage 'details',
+ * which is data stored by a function in background.js when it received message API..
+ */
 document.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed')
     chrome.storage.local.get('details', async function (data) {

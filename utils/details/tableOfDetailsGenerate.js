@@ -1,6 +1,11 @@
 import { formatDate } from "../formatDate.js";
 
-const headerGenerate = (cookieDetails) => {
+/**
+ * Generate header row for the table for details.html.
+ * @param cookieDetails
+ * @returns {HTMLTableRowElement}
+ */
+function headerGenerate (cookieDetails) {
     let headerRow = document.createElement('tr');
     for (let key of Object.keys(cookieDetails)) {
         let th = document.createElement('th');
@@ -10,7 +15,12 @@ const headerGenerate = (cookieDetails) => {
     return headerRow;
 }
 
-const rowGenerate = (cookieDetails) => {
+/**
+ * Generate a row for the table for details.html.
+ * @param cookieDetails
+ * @returns {HTMLTableRowElement}
+ */
+function rowGenerate (cookieDetails) {
     let row = document.createElement('tr');
     for (let value of Object.values(cookieDetails)) {
         let td = document.createElement('td');
@@ -20,7 +30,12 @@ const rowGenerate = (cookieDetails) => {
     return row;
 }
 
-const tableOfDetailsGenerate = (cookieDetails) => {
+/**
+ * Generate table for details.html
+ * @param cookieDetails
+ * @returns {HTMLTableElement}
+ */
+function tableOfDetailsGenerate (cookieDetails) {
     let table = document.createElement('table');
     let header = headerGenerate(cookieDetails);
     table.appendChild(header);

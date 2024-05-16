@@ -1,3 +1,8 @@
+/**
+ * Send message from popup.js to background.js.
+ * @param data
+ * @returns {Promise<void>}
+ */
 export async function messageSend(data) {
     chrome.runtime.sendMessage({
         action: 'openOptionsPage',

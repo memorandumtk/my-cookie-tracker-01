@@ -1,5 +1,8 @@
 import { tableGenerate } from "./utils/popup/tableGenerate.js";
 
+/**
+ * Get the cookie data from storage and generate a table of the data.
+ */
 await chrome.storage.local.get("cookieData", (data) => {
     console.log(data);
     const cookieDataDiv = document.getElementById('cookie-data');
