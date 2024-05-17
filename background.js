@@ -26,7 +26,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+// Remove all cookie data in key: "cookieData" from storage
+// chrome.storage.local.remove("cookieData", data => {
+//     console.log('Removed cookieData:', data);
+// });
+
 // Listener for cookie changes
+// For testing purposes, I commented out below lines.
+
 // chrome.cookies.onChanged.addListener((changeInfo) => {
 //
 //   if (!changeInfo.removed) {
